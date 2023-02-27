@@ -1,0 +1,85 @@
+{
+  "network": {
+    "hostname": "test",
+    "ip_forward": 0,
+    "interfaces": [
+      {
+        "name": "eth0",
+        "dhcp": "yes"
+      }
+    ]
+  },
+  "hostkeys": {
+    "dsa": {
+      "private": "",
+      "public": ""
+    },
+    "ecdsa": {
+      "private": "",
+      "public": ""
+    },
+    "ed25519": {
+      "private": "",
+      "public": ""
+    },
+    "rsa": {
+      "private": "",
+      "public": ""
+    }
+  },
+  "users": [
+    {
+      "comment": "root",
+      "name": "root",
+      "uid": "",
+      "group": "",
+      "secondarygroups": "",
+      "password": "g6rg4tr684g",
+      "update_password": "always",
+      "authorized_keys": "",
+      "generate_ssh_key": "no",
+      "ssh_key_file": ".ssh/id_rsa",
+      "ssh_key_passphrase": "",
+      "ssh_key_type": "rsa",
+      "create_home": "no",
+      "home": "/root",
+      "shell": "/bin/bash",
+      "email": "root@localhost",
+      "issystemaccount": "no"
+    },
+    {
+      "comment": "pi",
+      "name": "pi",
+      "uid": "",
+      "group": "",
+      "secondarygroups": "",
+      "password": "1456ef44zf",
+      "update_password": "always",
+      "authorized_keys": "",
+      "generate_ssh_key": "no",
+      "ssh_key_file": ".ssh/id_rsa",
+      "ssh_key_passphrase": "",
+      "ssh_key_type": "rsa",
+      "create_home": "no",
+      "home": "/home/pi",
+      "shell": "/bin/bash",
+      "email": "pi@localhost",
+      "issystemaccount": "no"
+    }
+  ],
+  "groups": "",
+  "applications": {
+    "packages": [
+      {
+        "comment": "Nano",
+        "name": "nano",
+        "state": "present"
+      },
+      {
+        "comment": "Tools",
+        "name": ["rsync","git", "nano", "net-tools"],
+        "state": "present"
+      }
+    ]
+  }
+}

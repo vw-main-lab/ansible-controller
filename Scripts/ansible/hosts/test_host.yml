@@ -1,0 +1,129 @@
+---
+- name: Configure base settings
+  tags:
+    - base
+    - full
+  hosts: test
+  tasks:
+
+    - name: Include role general.utils.install-utils
+      include_role:
+        name: "general.utils.install-utils"
+
+    - name: Include role general.debug.display-os-infos
+      include_role:
+        name: "general.debug.display-os-infos"
+
+    # - name: Include role general.utils.install-webmin
+    #   include_role:
+    #     name: "general.utils.install-webmin"
+ 
+    # - name: Include role general.system.set-network
+    #   include_role:
+    #     name: "general.system.set-network"
+    #   vars:
+    #     set_network_json: "{{ lab_host_conf }}"
+
+    #~ - name: Include role general.system.set-hostkeys
+      #~ include_role:
+        #~ name: "general.system.set-hostkeys"
+      #~ vars:
+        #~ set_hostkeys_restart_service: false
+        #~ set_hostkeys_json: "{{ lab_host_conf }}"
+        
+    # - name: Force all notified handlers to run at this point, not waiting for normal sync points
+    #   meta: flush_handlers
+        
+    # - name: Delayed reboot
+    #   shell: /usr/bin/sleep 5 && /usr/sbin/reboot
+    #   async: 1
+    #   poll: 0
+    #   args:
+    #     executable: /bin/bash
+        
+    # - name: Sleep for 15 seconds before ending play
+    #   wait_for:
+    #     timeout: 15
+    #   delegate_to: localhost
+
+# - name: Configure test host
+#   tags:
+#     - advanced
+#     - full
+#   hosts: test
+#   gather_facts: no # gather_facts turned off not to fail waiting for host to be up
+#   tasks:
+
+#     - name: Wait 300 seconds, PLEASE START HOST BEFORE TIME'S UP
+#       ansible.builtin.wait_for_connection:
+#         #delay: 30
+#         timeout: 300
+
+#     - name: gather facts manually since they were turned off first
+#       setup:
+
+#     - name: Include role general.utils.update-os
+#       include_role:
+#         name: "general.utils.update-os"
+
+#     - name: Include role general.utils.upgrade-packages
+#       include_role:
+#         name: "general.utils.upgrade-packages"
+    
+#     - name: Include role general.system.set-applications
+#       include_role:
+#         name: "general.system.set-applications"
+#       vars:
+#         set_applications_json: "{{ lab_host_conf }}"
+        
+#     - name: Include role general.system.set-usersandgroups
+#       include_role:
+#         name: "general.system.set-usersandgroups"
+#       vars:
+#         set_usersandgroups_json: "{{ lab_host_conf }}"
+
+#     #~ - name: Copy ipv4 firewall rules
+#       #~ ansible.builtin.copy:
+#         #~ src: "{{ lab_base_dir }}/Configuration Files/hosts/pluto/filesystem/etc/iptables/rules.v4"
+#         #~ dest: "{{ item }}"
+#         #~ owner: root
+#         #~ group: root
+#         #~ mode: '0644'
+#       #~ loop:
+#         #~ - /etc/iptables/rules.v4
+#         #~ - /etc/iptables.up.rules
+#       #~ register: copy_ipv4_firewall_rules
+
+#     #~ - name: restart firewall
+#       #~ ansible.builtin.shell: "/usr/sbin/iptables-restore /etc/iptables/rules.v4"
+#       #~ when: copy_ipv4_firewall_rules.changed
+
+#     #~ - name: Copy rsyslog firewall logs redirection rules
+#       #~ ansible.builtin.copy:
+#         #~ src: "{{ lab_base_dir }}/Configuration Files/hosts/pluto/filesystem/etc/rsyslog.d/50-my_iptables.conf"
+#         #~ dest: "/etc/rsyslog.d/50-my_iptables.conf"
+#         #~ owner: root
+#         #~ group: root
+#         #~ mode: '0644'
+#       #~ register: copy_rsyslog_iptables_redir_rules
+
+#     #~ - name: restart rsyslog service
+#       #~ ansible.builtin.service:
+#         #~ name: rsyslog
+#         #~ state: restarted
+#       #~ when: copy_rsyslog_iptables_redir_rules.changed
+
+#     #~ - name: Copy dhcpcd persistent route(s) file
+#       #~ ansible.builtin.copy:
+#         #~ src: "{{ lab_base_dir }}/Configuration Files/hosts/pluto/filesystem/lib/dhcpcd/dhcpcd-hooks/40-route"
+#         #~ dest: /lib/dhcpcd/dhcpcd-hooks/40-route
+#         #~ owner: root
+#         #~ group: root
+#         #~ mode: '0644'
+#       #~ register: copy_dhcpcd_route_file
+
+#     #~ - name: restart dhcpcd service
+#       #~ ansible.builtin.service:
+#         #~ name: dhcpcd
+#         #~ state: restarted
+#       #~ when: copy_dhcpcd_route_file.changed
