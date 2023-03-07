@@ -1,45 +1,45 @@
 roles:
 
-  # - name: general.debug.display-os-infos
-  #   src: "git+https://github.com/vw-ansible-roles/general.debug.display-os-infos.git"
-  #   #~ version: "1.0"
+  - name: general.debug.display-os-infos
+    src: "git+https://github.com/vw-ansible-roles/general.debug.display-os-infos.git"
+    #~ version: "1.0"
 
-  # - name: general.utils.update-os
-  #   src: "git+https://github.com/vw-ansible-roles/general.utils.update-os"
-  #   #~ src: "git+git@github.com:vw-ansible-roles/general.utils.update-os.git"
-  #   #~ version: "1.0"
+  - name: general.utils.update-os
+    src: "git+https://github.com/vw-ansible-roles/general.utils.update-os"
+    #~ src: "git+git@github.com:vw-ansible-roles/general.utils.update-os.git"
+    #~ version: "1.0"
 
-  # - name: general.system.set-usersandgroups
-  #   src: "git+https://github.com/vw-ansible-roles/general.system.set-usersandgroups"
-  #   #~ version: "1.0"
+  - name: general.system.set-usersandgroups
+    src: "git+https://github.com/vw-ansible-roles/general.system.set-usersandgroups"
+    #~ version: "1.0"
     
-  # - name: general.system.set-applications
-  #   src: "git+https://github.com/vw-ansible-roles/general.system.set-applications"
-  #   #src: "git+file:///home/parallels/Documents/tmp/general.system.set-applications"
-  #   #~ version: "1.0"
+  - name: general.system.set-applications
+    src: "git+https://github.com/vw-ansible-roles/general.system.set-applications"
+    #src: "git+file:///home/parallels/Documents/tmp/general.system.set-applications"
+    #~ version: "1.0"
     
-  # - name: general.utils.upgrade-packages
-  #   src: "git+https://github.com/vw-ansible-roles/general.utils.upgrade-packages"
-  #   #~ version: "1.0"
+  - name: general.utils.upgrade-packages
+    src: "git+https://github.com/vw-ansible-roles/general.utils.upgrade-packages"
+    #~ version: "1.0"
     
-  # - name: general.system.set-hostkeys
-  #   src: "git+https://github.com/vw-ansible-roles/general.system.set-hostkeys"
-  #   #~ version: "1.0"
+  - name: general.system.set-hostkeys
+    src: "git+https://github.com/vw-ansible-roles/general.system.set-hostkeys"
+    #~ version: "1.0"
     
-  # - name: general.system.set-network
-  #   src: "git+https://github.com/vw-ansible-roles/general.system.set-network"
-  #   #~ version: "1.0"
+  - name: general.system.set-network
+    src: "git+https://github.com/vw-ansible-roles/general.system.set-network"
+    #~ version: "1.0"
     
-  # - name: general.utils.install-webmin
-  #   src: "git+https://github.com/vw-ansible-roles/general.utils.install-webmin"
-  #   #~ version: "1.0"
+  - name: general.utils.install-webmin
+    src: "git+https://github.com/vw-ansible-roles/general.utils.install-webmin"
+    #~ version: "1.0"
 
-  # - name: general.utils.install-utils
-  #   src: "git+https://github.com/vw-ansible-roles/general.utils.install-utils"
-  #   #src: git+file:///media/psf/Home/Documents/Projets/Lab/general.utils.install-utils
-  #   #~ version: "1.0"
+  - name: general.utils.install-utils
+    src: "git+https://github.com/vw-ansible-roles/general.utils.install-utils"
+    #src: git+file:///media/psf/Home/Documents/Projets/Lab/general.utils.install-utils
+    #~ version: "1.0"
 
   - name: wares.lan.filebeat
-    #src: "git+https://github.com/vw-main-lab/wares.lan.filebeat.git"
-    src: git+file:///media/psf/Home/Documents/Projets/Lab/wares.lan.filebeat
+    src: "git+https://github.com/vw-main-lab/wares.lan.filebeat.git"
+    # src: git+file:///media/psf/Home/Documents/Projets/Lab/wares.lan.filebeat
     #~ version: "1.0"

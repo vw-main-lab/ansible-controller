@@ -59,30 +59,45 @@
     - name: gather facts manually since they were turned off first
       setup:
 
-    # - name: Include role general.utils.update-os
-    #   include_role:
-    #     name: "general.utils.update-os"
+    - name: Include role general.utils.update-os
+      include_role:
+        name: "general.utils.update-os"
 
-    # - name: Include role general.utils.upgrade-packages
-    #   include_role:
-    #     name: "general.utils.upgrade-packages"
+    - name: Include role general.utils.upgrade-packages
+      include_role:
+        name: "general.utils.upgrade-packages"
     
-    # - name: Include role general.system.set-applications
-    #   include_role:
-    #     name: "general.system.set-applications"
-    #   vars:
-    #     set_applications_json: "{{ lab_host_conf_file }}"
+    - name: Include role general.system.set-applications
+      include_role:
+        name: "general.system.set-applications"
+      vars:
+        set_applications_json: "{{ lab_host_conf_file }}"
         
-    # - name: Include role general.system.set-usersandgroups
-    #   include_role:
-    #     name: "general.system.set-usersandgroups"
-    #   vars:
-    #     set_usersandgroups_json: "{{ lab_host_conf_file }}"
+    - name: Include role general.system.set-usersandgroups
+      include_role:
+        name: "general.system.set-usersandgroups"
+      vars:
+        set_usersandgroups_json: "{{ lab_host_conf_file }}"
 
     - name: Include role wares.lan.filebeat
       include_role:
         name: "wares.lan.filebeat"
       vars:
+        wares_lan_filebeat_source:
+          temporary_dir: "/var/tmp"
+          extracted_dirname: "filebeat-7.16.3-linux-arm64"
+          download_url: "https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.16.3-linux-arm64.tar.gz"
+          checksum: "sha512:118f947cba9c22bd01ed2de4bd88ae92e19f9c5e60fda6db24c9e31ebf72a07b6bec5bf5707776cbeed770d7787445dc76e5604e9765ad513bb0978853a15e5d"
+        wares_lan_filebeat_service:
+          filename: "filebeat-wares.service"
+          description: "Filebeat (wares) service"
+          after: ["network.target"]
+          type: "simple"
+          killmode: "process"
+          execstart: "{{ wares_lan_filebeat.binary_dir }}/filebeat -c {{ wares_lan_filebeat.config_dir }}/{{ wares_lan_filebeat.config_filename }}"
+          wantedby: "multi-user.target"
+          user: "{{ wares_lan_filebeat.user }}"
+          group: "{{ wares_lan_filebeat.group }}"
         wares_lan_filebeat:
           binary_dir: "/usr/local/bin/filebeat"
           config_dir: "/usr/local/bin/filebeat/config"
@@ -110,11 +125,3 @@
               hosts: ["logstash02:5044", "logstash02:5045"]
               loadbalance: false
               worker: 2 # set to -1 to comment out in filebeat configuration file
-        wares_lan_filebeat_source:
-          temporary_dir: "/var/tmp"
-          #extracted_dirname: "filebeat-7.16.3-linux-x86_64"
-          #download_url: "https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.16.3-linux-x86_64.tar.gz"
-          #checksum: "sha512:6a2223b79e97f6560a7113c1490d29e7bd8cc6b1c6be82121f7257651362ae440701f19e0b92856bacf7b7598cb7d189b926475fa0d8a87feca497ae10425b7c"
-          extracted_dirname: "filebeat-7.16.3-linux-arm64"
-          download_url: "https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.16.3-linux-arm64.tar.gz"
-          checksum: "sha512:118f947cba9c22bd01ed2de4bd88ae92e19f9c5e60fda6db24c9e31ebf72a07b6bec5bf5707776cbeed770d7787445dc76e5604e9765ad513bb0978853a15e5d"
