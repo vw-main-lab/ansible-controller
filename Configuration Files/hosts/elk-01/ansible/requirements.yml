@@ -43,3 +43,8 @@ roles:
     src: "git+https://github.com/vw-main-lab/wares.lan.filebeat.git"
     # src: git+file:///media/psf/Home/Documents/Projets/Lab/wares.lan.filebeat
     #~ version: "1.0"
+
+  - name: wares.lan.logstash
+    #src: "git+https://github.com/vw-main-lab/wares.lan.logstash.git"
+    src: git+file:///media/psf/Home/Documents/Projets/Lab/wares.lan.logstash
+    #~ version: "1.0"
