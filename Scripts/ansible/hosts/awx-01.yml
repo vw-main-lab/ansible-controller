@@ -11,9 +11,9 @@
       include_role:
         name: "general.utils.upgrade-packages"
 
-    # - name: Include role wares.admin.awx
-    #   include_role:
-    #     name: "wares.admin.awx"
-    #   vars:
-    #     wares_admin_awx_actions: ["install"]
-    #     wares_admin_awx_filepath: "filters/other/test.json"
+    - name: Include role wares.admin.awx
+      include_role:
+        name: "wares.admin.awx"
+      vars:
+        wares_admin_awx_actions: ["install"]
+        wares_admin_awx_filepath: "filters/other/test.json"
