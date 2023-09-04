@@ -1,0 +1,12 @@
+roles:
+
+  - name: general.utils.update-os
+    src: "git+https://github.com/vw-ansible-roles/general.utils.update-os"
+
+  - name: general.utils.upgrade-packages
+    src: "git+https://github.com/vw-ansible-roles/general.utils.upgrade-packages"
+
+  - name: wares.admin.awx
+    #src: "git+https://github.com/vw-main-lab/wares.lan.logstash.git"
+    src: git+file:///media/psf/Home/Documents/Projets/Lab/wares.admin.awx
+    #~ version: "1.0"

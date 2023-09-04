@@ -1,0 +1,91 @@
+{
+  "network": {
+    "hostname": "awx-01",
+    "ip_forward": 0,
+    "interfaces": [
+      {
+        "name": "eth0",
+        "dhcp": "yes"
+      }
+    ]
+  },
+  "hostkeys": {
+    "dsa": {
+      "private": "",
+      "public": ""
+    },
+    "ecdsa": {
+      "private": "-----BEGIN OPENSSH PRIVATE KEY-----\nb3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAaAAAABNlY2RzYS\n1zaGEyLW5pc3RwMjU2AAAACG5pc3RwMjU2AAAAQQQyVJuTZWUkoARYWqXNlDFT2//267SW\nZAAvAw7//KouCdPVEXwaQ22vYKnju6k+dPLK4HUikb6eK/W0UYRuIH2BAAAAuDRb0940W9\nPeAAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBDJUm5NlZSSgBFha\npc2UMVPb//brtJZkAC8DDv/8qi4J09URfBpDba9gqeO7qT508srgdSKRvp4r9bRRhG4gfY\nEAAAAhANGvNv2eSLlosI24CWeLS1x3bBmzSmVLv1jKiy14Kd0GAAAAGHJvb3RAZGViaWFu\nLWdudS1saW51eC0xMAECAwQFBgc=\n-----END OPENSSH PRIVATE KEY-----\n",
+      "public": "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBDJUm5NlZSSgBFhapc2UMVPb//brtJZkAC8DDv/8qi4J09URfBpDba9gqeO7qT508srgdSKRvp4r9bRRhG4gfYE= root@debian-gnu-linux-10\n"
+    },
+    "ed25519": {
+      "private": "-----BEGIN OPENSSH PRIVATE KEY-----\nb3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW\nQyNTUxOQAAACBLCTOe+itELLn79WHoqG0g7KWGRjmP/I1B3QK85w5YsAAAAKBsOVoPbDla\nDwAAAAtzc2gtZWQyNTUxOQAAACBLCTOe+itELLn79WHoqG0g7KWGRjmP/I1B3QK85w5YsA\nAAAECEKi0BCSqafXoKLSZgKBjR3PgaSg1cxBvBrxpAg7YgGEsJM576K0Qsufv1YeiobSDs\npYZGOY/8jUHdArznDliwAAAAGHJvb3RAZGViaWFuLWdudS1saW51eC0xMAECAwQF\n-----END OPENSSH PRIVATE KEY-----\n",
+      "public": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEsJM576K0Qsufv1YeiobSDspYZGOY/8jUHdArznDliw root@debian-gnu-linux-10\n"
+    },
+    "rsa": {
+      "private": "-----BEGIN OPENSSH PRIVATE KEY-----\nb3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAABFwAAAAdzc2gtcn\nNhAAAAAwEAAQAAAQEAtLZrmakx9v0tIVF6AhgAgNm4V4KI/maWyGSK1fxEogA2vp1AxwjH\ne4iOSpxxXdczOhp6mLvXNsamwTOWnnxiRegtaNEdtox7TOSXbWy7XIBHYgbE/egCPBQEyw\nR6sZExx62evA/Dpm7hUsPdwiePt0CogSC7mpQgmKA+ln1eX4ykAehMM3fQN1bZSttXbTWu\n2SxTl9mT4dVmr1l9QLiq3iPe5lh7anE8ihu+ui1fUJWIY/koW8O6yYwfbzHfaFwi5x5JBA\n5NlLt6L1CLJVy5Ul01a7Hvgt7GCRuc3LMBEiFYJspsHO2cnzy0rgp+x7OjFC3ZB+b6Fm9l\nKNUWZ8APVwAAA9CCn2Fggp9hYAAAAAdzc2gtcnNhAAABAQC0tmuZqTH2/S0hUXoCGACA2b\nhXgoj+ZpbIZIrV/ESiADa+nUDHCMd7iI5KnHFd1zM6GnqYu9c2xqbBM5aefGJF6C1o0R22\njHtM5JdtbLtcgEdiBsT96AI8FATLBHqxkTHHrZ68D8OmbuFSw93CJ4+3QKiBILualCCYoD\n6WfV5fjKQB6Ewzd9A3VtlK21dtNa7ZLFOX2ZPh1WavWX1AuKreI97mWHtqcTyKG766LV9Q\nlYhj+Shbw7rJjB9vMd9oXCLnHkkEDk2Uu3ovUIslXLlSXTVrse+C3sYJG5zcswESIVgmym\nwc7ZyfPLSuCn7Hs6MULdkH5voWb2Uo1RZnwA9XAAAAAwEAAQAAAQBEUVKMXPKOtVgCaJL/\nh6NpEuYl7ytrQc1vJNN34k7wD7Sii0CZ/i+r/AwPGOWi3GB5btk6NIlAJAmWsLIYaF2eoA\n/KuIPLJ4DVqPW2YIzUg4p4/KYsdzGhFNBbD+5ygrmXC4QfBLaqjPCSIYoMhHhIhyEs7/r8\njVNlX+9JZUvwQs90C2/GnHyiD3YoNpSlLDmxE5+JI92rjOt2hkgSsPokb6rxADkSaVi1Zb\noDOzexKek3QOPekI3eMTVFtVWJ8wJSS3xMZIWMYLQ5txiJT8CxxhAHljPsLC6Z5LTwDdZA\nKD6kFKm0xgB2GnLizqVg0SFT6Ua+OGI3jZaKNN/nFIFBAAAAgAw3i/dUhYxX2xO/NFsyA0\nplEDfJHqIjO7uhXpg0pUR4pbEZoHo4pQtEHIdtZNlIPrkFErnefvzL9ZMogwqzOILMtuQT\npJkCvQXfEkfYKf8dvQwxK+2yUO+DQ+yCJ3s8Q6LpUUHPOs1aF4oMI5hrCXGn+GDqM+1h88\nXfrxCWuxO8AAAAgQDwxgdpJeSFJnWIId0c+zuof9u4URGc/7yn95syP8bnaU40Gngtu1aL\nUqKGFOejUPj72/qvVbj8gJqm0atZ9jgcxSwT/hiY0oVE/ZYPrWh3DUXARjclQz9xj/WONF\nejZPdH2yNqzV+Y7bVRHU5klEyOkmNX67G6UnmI2+jjaJ9PJQAAAIEAwCQK1sxP5CsfuTu1\nRXujktEzVp5y6zvsCSjOGHzsq9eYbAzQk5ZyR8EzytzELMj0zlErE8Ubj23m7/0N4sbx4z\nHsGtI0rGaPJPe/v9MgNq5/LZYqE7WT+g/4W6XuWqOCMTt/2MrOBbeyxonbrUJ2WaRQ9zzJ\nCrKvs40IMwnUCcsAAAAYcm9vdEBkZWJpYW4tZ251LWxpbnV4LTEwAQID\n-----END OPENSSH PRIVATE KEY-----\n",
+      "public": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC0tmuZqTH2/S0hUXoCGACA2bhXgoj+ZpbIZIrV/ESiADa+nUDHCMd7iI5KnHFd1zM6GnqYu9c2xqbBM5aefGJF6C1o0R22jHtM5JdtbLtcgEdiBsT96AI8FATLBHqxkTHHrZ68D8OmbuFSw93CJ4+3QKiBILualCCYoD6WfV5fjKQB6Ewzd9A3VtlK21dtNa7ZLFOX2ZPh1WavWX1AuKreI97mWHtqcTyKG766LV9QlYhj+Shbw7rJjB9vMd9oXCLnHkkEDk2Uu3ovUIslXLlSXTVrse+C3sYJG5zcswESIVgmymwc7ZyfPLSuCn7Hs6MULdkH5voWb2Uo1RZnwA9X root@debian-gnu-linux-10\n"
+    }
+  },
+  "users": [
+    {
+      "comment": "root",
+      "name": "root",
+      "uid": "",
+      "group": "",
+      "secondarygroups": "",
+      "password": "Parallels",
+      "update_password": "always",
+      "authorized_keys": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQSjbwrem2p5S/8uqciBbNFlgRCIzEQl0qb/zMwtVI6s9iD3ipkLFuHLQlx9zpie5vqCuP3CATE8izk1edokG8sO1BXEtNqNr3cZg9MSMdT/QFW0mMMG76mh7R/QympjgwsiBnr8Svbdd2SnpRdJJBeHdsWciaXFouedPG40fBWh/OpshW/uEXu4kz7xsNKXUnNdNsfzANxadULXiX8Glg541psyMMK3uC+VNt45GgstfArjPXfvA/0MVrNatI8hSVbfAOlMrtPExt5Bp1+aBPyi+k4GWdD5WgWl2ujyzsu1HFHcHK2MfyFIyKNz+4duXu11hmpf7tsDk7MXrw0str parallels@ansible\n",
+      "generate_ssh_key": "no",
+      "ssh_key_file": "",
+      "ssh_key_passphrase": "",
+      "ssh_key_type": "rsa",
+      "create_home": "no",
+      "home": "/root",
+      "shell": "/bin/bash",
+      "email": "root@localhost",
+      "issystemaccount": "no"
+    },
+    {
+      "comment": "parallels",
+      "name": "parallels",
+      "uid": "",
+      "group": "",
+      "secondarygroups": "",
+      "password": "Parallels",
+      "update_password": "always",
+      "authorized_keys": "",
+      "generate_ssh_key": "no",
+      "ssh_key_file": "",
+      "ssh_key_passphrase": "",
+      "ssh_key_type": "rsa",
+      "create_home": "no",
+      "home": "/home/parallels",
+      "shell": "/bin/bash",
+      "email": "parallels@localhost",
+      "issystemaccount": "no"
+    }
+  ],
+  "groups": "",
+  "applications": {
+    "packages": [
+      {
+        "comment": "Nano",
+        "name": "nano",
+        "state": "present"
+      },
+      {
+        "comment": "Tools",
+        "name": [
+          "rsync",
+          "git",
+          "nano",
+          "net-tools"
+        ],
+        "state": "present"
+      }
+    ]
+  },
+  "services": ""
+}
