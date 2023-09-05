@@ -17,3 +17,5 @@
       vars:
         wares_admin_awx_actions: ["install"]
         wares_admin_awx_filepath: "filters/other/test.json"
+        wares_admin_awx_username: "admin"
+        wares_admin_awx_securepassword: "deRzpFgg33542f"
