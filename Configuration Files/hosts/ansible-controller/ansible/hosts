@@ -19,8 +19,8 @@ gaia ansible_host=gaia.dmz.domain.org ansible_user=root ansible_python_interpret
 integration ansible_host=192.168.0.100 ansible_user=root ansible_python_interpreter=/usr/bin/python3
 test_host ansible_host=10.211.55.7 ansible_user=root
 ansible_controller ansible_host=10.211.55.6 ansible_user=root
-elk_01 ansible_host=10.211.55.7 ansible_user=root
-awx_01 ansible_host=10.211.55.7 ansible_user=root
+awx_01 ansible_host=10.211.55.9 ansible_user=root
+elk_01 ansible_host=10.211.55.10 ansible_user=root
 
 # Ex 1: Ungrouped hosts, specify before any group headers.
 
