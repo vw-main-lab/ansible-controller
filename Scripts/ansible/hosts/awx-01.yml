@@ -3,13 +3,13 @@
   gather_facts: yes
   tasks:
 
-    # - name: Include role general.utils.update-os
-    #   include_role:
-    #     name: "general.utils.update-os"
+    - name: Include role general.utils.update-os
+      include_role:
+        name: "general.utils.update-os"
 
-    # - name: Include role general.utils.upgrade-packages
-    #   include_role:
-    #     name: "general.utils.upgrade-packages"
+    - name: Include role general.utils.upgrade-packages
+      include_role:
+        name: "general.utils.upgrade-packages"
 
     - name: Include role wares.admin.awx
       include_role:
