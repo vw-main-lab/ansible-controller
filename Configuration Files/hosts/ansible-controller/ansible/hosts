@@ -20,6 +20,7 @@ integration ansible_host=192.168.0.100 ansible_user=root ansible_python_interpre
 test_host ansible_host=10.211.55.7 ansible_user=root
 ansible_controller ansible_host=10.211.55.6 ansible_user=root
 elk_01 ansible_host=10.211.55.7 ansible_user=root
+mate-01 ansible_host=10.100.1.241 ansible_user=root
 
 # Ex 1: Ungrouped hosts, specify before any group headers.
 

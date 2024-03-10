@@ -1,0 +1,185 @@
+---
+- name: Configure base settings
+  tags:
+    - base
+    - full
+  hosts: elk_02
+  tasks:
+
+    - name: Include role general.utils.install-utils
+      include_role:
+        name: "general.utils.install-utils"
+
+    - name: Include role general.utils.install-webmin
+      include_role:
+        name: "general.utils.install-webmin"
+  
+    - name: Include role general.system.set-network
+      include_role:
+        name: "general.system.set-network"
+      vars:
+        set_network_json: "{{ lab_host_conf_file }}"
+        set_network_manager: ""
+
+    - name: Include role general.system.set-hostkeys
+      include_role:
+        name: "general.system.set-hostkeys"
+      vars:
+        set_hostkeys_restart_service: false
+        set_hostkeys_json: "{{ lab_host_conf_file }}"
+        
+    - name: Force all notified handlers to run at this point, not waiting for normal sync points
+      meta: flush_handlers
+        
+    - name: Delayed reboot
+      shell: /usr/bin/sleep 5 && /usr/sbin/reboot
+      async: 1
+      poll: 0
+      args:
+        executable: /bin/bash
+        
+    - name: Sleep for 15 seconds before ending play
+      wait_for:
+        timeout: 15
+      delegate_to: localhost
+
+- name: Configure advanced settings
+  tags:
+    - advanced
+    - full
+  hosts: elk_01
+  gather_facts: no # gather_facts turned off not to fail waiting for host to be up
+  tasks:
+
+    - name: Wait 300 seconds, PLEASE START HOST BEFORE TIME'S UP
+      ansible.builtin.wait_for_connection:
+        #delay: 30
+        timeout: 300
+
+    - name: gather facts manually since they were turned off first
+      setup:
+
+    # - name: Include role general.utils.update-os
+    #   include_role:
+    #     name: "general.utils.update-os"
+
+    # - name: Include role general.utils.upgrade-packages
+    #   include_role:
+    #     name: "general.utils.upgrade-packages"
+    
+    # - name: Include role general.system.set-applications
+    #   include_role:
+    #     name: "general.system.set-applications"
+    #   vars:
+    #     set_applications_json: "{{ lab_host_conf_file }}"
+        
+    # - name: Include role general.system.set-usersandgroups
+    #   include_role:
+    #     name: "general.system.set-usersandgroups"
+    #   vars:
+    #     set_usersandgroups_json: "{{ lab_host_conf_file }}"
+
+    # - name: Include role wares.lan.filebeat
+    #   include_role:
+    #     name: "wares.lan.filebeat"
+    #   vars:
+    #     wares_lan_filebeat_source:
+    #       temporary_dir: "/var/tmp"
+    #       extracted_dirname: "filebeat-7.16.3-linux-arm64"
+    #       download_url: "https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.16.3-linux-arm64.tar.gz"
+    #       checksum: "sha512:118f947cba9c22bd01ed2de4bd88ae92e19f9c5e60fda6db24c9e31ebf72a07b6bec5bf5707776cbeed770d7787445dc76e5604e9765ad513bb0978853a15e5d"
+    #     wares_lan_filebeat_service:
+    #       filename: "filebeat-wares.service"
+    #       description: "Filebeat (wares) service"
+    #       after: ["network.target"]
+    #       type: "simple"
+    #       killmode: "process"
+    #       execstart: "{{ wares_lan_filebeat.binary_dir }}/filebeat -c {{ wares_lan_filebeat.config_dir }}/{{ wares_lan_filebeat.config_filename }}"
+    #       wantedby: "multi-user.target"
+    #       user: "{{ wares_lan_filebeat.user }}"
+    #       group: "{{ wares_lan_filebeat.group }}"
+    #     wares_lan_filebeat:
+    #       binary_dir: "/usr/local/bin/filebeat"
+    #       config_dir: "/usr/local/bin/filebeat/config"
+    #       user: "filebeat"
+    #       group: "users"
+    #       config_filename: "filebeat.yml"
+    #       run_as_service: true
+    #       general:
+    #         environment: "dev" # leave blank ("") to comment out in filebeat configuration file
+    #       inputs:
+    #         filestreams: # Paths that should be crawled and fetched, and optional additional fields
+    #           - {id: 'access-logs', enabled: true, paths: ['/var/log/apache/access.log'], fields: {my_field1: 'testfield_from_elk01', my_field2: 'xxxxxxxx'}, fields_under_root: true}
+    #           - {id: 'error-logs', enabled: false, paths: ['/var/log/apache/error.log','/var/log/syslog'], fields: {my_field1: 'testfield_from_elk02', my_field2: 'yyyyyyyy'}, fields_under_root: true}
+    #       outputs: # Configure what output to use when sending the data collected by the beat
+    #         elasticsearch:
+    #           enabled: true
+    #           hosts: ["someserver:9200"]
+    #           protocol: "https" # either `http` (default) or `https`.
+    #           auth: # Authentication credentials - either API key or username/password; leave api_key and username blank ("") to disable authentication
+    #             api_key: "" # format: "id:api-key", e.g "TiNAGG4BaaMdaH1tRfuU:KnR6yE41RrSowb0kQ0HWoA"
+    #             username: "myusername"
+    #             password: "P@55w0rd"
+    #         logstash:
+    #           enabled: false
+    #           hosts: ["logstash02:5044", "logstash02:5045"]
+    #           loadbalance: false
+    #           worker: 2 # set to -1 to comment out in filebeat configuration file
+
+    - name: Include role wares.lan.logstash
+      include_role:
+        name: "wares.lan.logstash"
+      vars:
+        # wares_lan_logstash_actions: ["install", "update"]
+        wares_lan_logstash_actions: ["update"]
+        wares_lan_logstash_json_filepath: "filters/other/test.json"
+        wares_lan_logstash_source:
+          temporary_dir: "/var/tmp"
+          extracted_dirname: "logstash-7.17.0"
+          download_url: "https://artifacts.elastic.co/downloads/logstash/logstash-7.17.0-linux-aarch64.tar.gz"
+          checksum: "sha512:4db3edd9e34717b53fba2859906d5b04d32d4d8eeab1d33cbcb37a5ec9e98b0d5958fb2e6c8eb345ca3cc291c3d3080f139b008ea56f7e5ef692fde7de5314d4"
+          config_filename: "logstash_conf_template.yml"
+        wares_lan_logstash_service:
+          filename: "logstash-wares.service"
+          description: "logstash (wares) service"
+          after: ["network.target"]
+          type: "simple"
+          killmode: "process"
+          execstart: "{{ wares_lan_logstash.binary_dir }}/bin/logstash -f {{ wares_lan_logstash.config_dir }}/{{ wares_lan_logstash.config_filename }}"
+          wantedby: "multi-user.target"
+          user: "{{ wares_lan_logstash.user }}"
+          group: "{{ wares_lan_logstash.group }}"
+        wares_lan_logstash:
+          binary_dir: "/usr/local/bin/logstash"
+          config_dir: "/usr/local/bin/logstash/config"
+          user: "logstash"
+          group: "users"
+          config_filename: "logstash-conf.yml"
+          run_as_service: true
+          inputs:
+            beats:
+              - {id: 'standard-port', enabled: true, port: 5044}
+              - {id: 'custom-port', enabled: false, port: 5045}
+          outputs:
+            elasticsearch:
+              enabled: true
+              hosts:
+                - {id: 'dev', url: 'http://localhost', enabled: true, port: 9201}
+                - {id: 'prod', url: 'http://es.domain.com', enabled: false, port: 9202}
+              index: "%{[@metadata][beat]}-%{[@metadata][version]}-%{+YYYY.MM.dd}"
+              ilm_enabled: False
+              ssl_enabled: False
+              ssl_certificate_verification: False
+              cacert: ""
+              auth:
+                api_key: ""
+                username: ""
+                password: ""
+            kafka:
+              enabled: true
+              hosts: 
+                - {id: 'dev', servername: 'localhost', enabled: true, port: 9092}
+                - {id: 'prod', servername: 'kafka.domain.com', enabled: false, port: 9092}
+              codec: "json"
+              topic_id: "incoming_log"
+              id: "test_kafka_incoming"
