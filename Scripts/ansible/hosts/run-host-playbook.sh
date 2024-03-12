@@ -18,7 +18,7 @@ export LAB_DIRECTORY=`readlink -f $SCRIPT_DIR/../../..`
 
 # Set vars
 export LAB_HOSTS_FILE="$LAB_DIRECTORY/Configuration Files/hosts/ansible-controller/ansible/hosts"
-export ANSIBLE_PRIVATE_KEY_FILE="$LAB_DIRECTORY/Configuration Files/hosts/ansible-controller/filesystem/home/lab/.ssh/id_rsa"
+#~ export ANSIBLE_PRIVATE_KEY_FILE="$LAB_DIRECTORY/Configuration Files/hosts/ansible-controller/filesystem/home/lab/.ssh/id_rsa"
 export ANSIBLE_REQUIREMENTS_FILE="$LAB_DIRECTORY/Configuration Files/hosts/$LAB_HOSTNAME/ansible/requirements.yml"
 export LAB_HOST_CONFIGURATION_FILE="$LAB_DIRECTORY/Configuration Files/hosts/$LAB_HOSTNAME/ansible/host_settings.json"
 export ANSIBLE_ROLES_TEMPDIR="$HOME/.ansible/roles_temp_$(date +%s)"
