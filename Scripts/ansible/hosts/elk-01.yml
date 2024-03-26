@@ -71,157 +71,166 @@
       #~ vars:
         #~ set_usersandgroups_json: "{{ lab_host_conf_file }}"
 
-    - name: Include role wares.lan.filebeat
+
+##########################
+# LOGSTASH
+##########################
+
+    - name: Install Logstash
       include_role:
-        name: "wares.lan.filebeat"
+        name: "wares.lan.logstash"
       vars:
-        wares_lan_filebeat_source:
+        wares_lan_logstash_actions: ["install"]
+        wares_lan_logstash_source:
           temporary_dir: "/var/tmp"
-          extracted_dirname: "filebeat-8.10.4-linux-arm64"
-          download_url: "https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.10.4-linux-arm64.tar.gz"
-          checksum: "sha512:b9f2a94e6856261eaf99e21b2194f6af77058cfabc431b2e6162b8c96b1251a29dbe8576c02a87f417643f929e7f91da488cb066b42104ffb70cbe39bb147f76"
+          extracted_dirname: "logstash-8.10.4"
+          download_url: "https://artifacts.elastic.co/downloads/logstash/logstash-8.10.4-linux-x86_64.tar.gz"
+          checksum: "sha512:30a28d7caed427d38d1155fb220517ba97b5c37ba6e709bf2abbaa7f0bd8ee3cb9676d74c82c7f77f23c54a6d67e921e1e847247f96e5d0e03cdac4b5699f13a"
+          config_filename: "logstash_conf_template.yml"
           basic_auth_user: ""
           basic_auth_password: ""
           force_basic_auth: no
-        wares_lan_filebeat_service:
-          filename: "filebeat-wares.service"
-          description: "Filebeat (wares) service"
+        wares_lan_logstash_service:
+          filename: "logstash-wares.service"
+          description: "logstash (wares) service"
           after: ["network.target"]
           type: "simple"
           killmode: "process"
-          execstart: "{{ wares_lan_filebeat.binary_dir }}/filebeat -c {{ wares_lan_filebeat.config_dir }}/{{ wares_lan_filebeat.config_filename }}"
+          execstart: "{{ wares_lan_logstash.binary_dir }}/bin/logstash -f {{ wares_lan_logstash.config_dir }}/{{ wares_lan_logstash.config_filename }}"
           wantedby: "multi-user.target"
-          user: "{{ wares_lan_filebeat.user }}"
-          group: "{{ wares_lan_filebeat.group }}"
-        wares_lan_filebeat:
+          user: "{{ wares_lan_logstash.user }}"
+          group: "{{ wares_lan_logstash.group }}"
+        wares_lan_logstash:
+          binary_dir: "/usr/local/bin/logstash"
+          config_dir: "/usr/local/bin/logstash/config"
+          user: "logstash"
+          group: "users"
+          config_filename: "logstash-conf.yml"
+          run_as_service: true
+          inputs:
+            beats:
+              - {id: 'standard-port', enabled: true, port: 5044}
+              - {id: 'custom-port', enabled: false, port: 5045}
+          outputs:
+            elasticsearch:
+              enabled: true
+              hosts:
+                - {id: 'dev', url: 'http://localhost', enabled: true, port: 9201}
+                - {id: 'prod', url: 'http://es.domain.com', enabled: false, port: 9202}
+              index: "%{[@metadata][beat]}-%{[@metadata][version]}-%{+YYYY.MM.dd}"
+              ilm_enabled: False
+              ssl_enabled: False
+              ssl_certificate_verification: False
+              cacert: ""
+              auth:
+                api_key: ""
+                username: ""
+                password: ""
+            kafka:
+              enabled: true
+              hosts: 
+                - {id: 'dev', servername: 'localhost', enabled: true, port: 9092}
+                - {id: 'prod', servername: 'kafka.domain.com', enabled: false, port: 9092}
+              codec: "json"
+              topic_id: "incoming_log"
+              id: "test_kafka_incoming"
+
+    - name: Edit Json Configuration (Filters)
+      include_role:
+        name: "wares.lan.logstash"
+      vars:
+        nodebug: false
+        wares_lan_logstash_actions: ["edit_json_config"]
+        wares_lan_logstash_json_block_section: "FILTERBLOCKS"
+        wares_lan_logstash_json_block_name: "Specific application filters"
+        wares_lan_logstash_json_config:
+          file_path: "/usr/local/bin/logstash/config/logstash-config.json"
+        wares_lan_logstash_json_condition: |
+          {
+            "Name": "APP001 code",
+            "Token": "1d564fz6e4f6ze4f6zed4ez",
+            "String": "else if \"1d564fz6e4f6ze4f6zed4ez\" in [logstash_application_token]",
+            "Filters": [
+              {
+                "Name": "Grok filter for new application",
+                "Type": "grok",
+                "Content": "match => { \"message\" => \"?<app_timestamp>%{GREEDYDATA} %{GREEDYDATA}) :: %{LOGLEVEL} :: %{IPV4} - - \\[%{GREEDYDATA}\\ %{TIME}\\]  %{WORD:http_method}%{GREEDYDATA:url_path} HTTP/%{NUMBER:http_version}  %{NUMBER:http_status_code} -\" }"
+              },
+              {
+                "Name": "Date filter",
+                "Type": "date",
+                "Content": "locale => \"en\"\nmatch => \"[\"app_timestamp\"], \"yyyy-MM-dd HH:mm:ss,SSS\"]\ntimezone => \"Europe/Paris\"\ntarget => \"timestamp\"\nadd_field => { \"hello\" => \"world\" }"
+              }
+            ]
+          }
+
+
+    - name: Edit Json Configuration (Beats)
+      include_role:
+        name: "wares.lan.logstash"
+      vars:
+        nodebug: false
+        wares_lan_logstash_actions: ["edit_json_config"]
+        wares_lan_logstash_json_block_section: "BEATBLOCKS"
+        wares_lan_logstash_json_block_name: "Filestreams"
+        wares_lan_logstash_json_config:
+          file_path: "/usr/local/bin/logstash/config/logstash-config.json"
+        wares_lan_logstash_json_token: ""
+        wares_lan_logstash_json_condition: |
+          {
+            "Id": "my-filestream-id",
+            "Enabled": true,
+            "Hosts": [
+              "server-host-01"
+            ],
+            "Os": "Linux",
+            "Paths": [
+              "/var/log/*.log",
+              "/var/log/other/daily.log"
+            ],
+            "Token": "1d564fz6e4f6ze4f6zed4ez",
+            "Description": "Some example input filestream",
+            "Fields": {
+                "app_code": "APP001",
+                "logs_retention": "month",
+                "logs_type": "testlogs",
+                "logstash_application_token": "1d564fz6e4f6ze4f6zed4ez"
+              },
+            "FieldsUnderRoot": true
+          }
+
+    - name: Include role wares.lan.logstash
+      include_role:
+        name: "wares.lan.logstash"
+      vars:
+        wares_lan_logstash_actions: ["update_logstash_filters"]
+        wares_lan_logstash:
+          config_dir: "/usr/local/bin/logstash/config"
+          config_filename: "logstash-conf.yml"
+        wares_lan_logstash_json_config:
+          file_path: "/usr/local/bin/logstash/config/logstash-config.json"
+          remote_src: yes
+
+
+##########################
+# FILEBEAT
+##########################
+
+    - name: Install beats
+      include_role:
+        name: "wares.lan.logstash"
+      vars:
+        nodebug: false
+        wares_lan_logstash_actions: ["install_beats"]
+        wares_lan_logstash_beats_hosts: ["*"]
+        wares_lan_logstash_beats_tokens: ["*"]
+        wares_lan_logstash_json_config:
+          file_path: "/usr/local/bin/logstash/config/logstash-config.json"
+          remote_src: yes
+        wares_lan_filebeat_fs:
           binary_dir: "/usr/local/bin/filebeat"
           config_dir: "/usr/local/bin/filebeat/config"
           user: "filebeat"
           group: "users"
           config_filename: "filebeat.yml"
-          run_as_service: true
-          general:
-            environment: "dev" # leave blank ("") to comment out in filebeat configuration file
-          inputs:
-            filestreams: # Paths that should be crawled and fetched, and optional additional fields
-              - {id: 'access-logs', enabled: true, paths: ['/var/log/apache/access.log'], fields: {my_field1: 'testfield_from_elk01', my_field2: 'xxxxxxxx'}, fields_under_root: true}
-              - {id: 'error-logs', enabled: false, paths: ['/var/log/apache/error.log','/var/log/syslog'], fields: {my_field1: 'testfield_from_elk02', my_field2: 'yyyyyyyy'}, fields_under_root: true}
-          outputs: # Configure what output to use when sending the data collected by the beat
-            elasticsearch:
-              enabled: true
-              hosts: ["someserver:9200"]
-              protocol: "https" # either `http` (default) or `https`.
-              auth: # Authentication credentials - either API key or username/password; leave api_key and username blank ("") to disable authentication
-                api_key: "" # format: "id:api-key", e.g "TiNAGG4BaaMdaH1tRfuU:KnR6yE41RrSowb0kQ0HWoA"
-                username: "myusername"
-                password: "P@55w0rd"
-            logstash:
-              enabled: false
-              hosts: ["logstash02:5044", "logstash02:5045"]
-              loadbalance: false
-              worker: 2 # set to -1 to comment out in filebeat configuration file
-
-    #~ - name: Include role wares.lan.logstash
-      #~ include_role:
-        #~ name: "wares.lan.logstash"
-      #~ vars:
-        #~ wares_lan_logstash_actions: ["install"]
-        #~ wares_lan_logstash_source:
-          #~ temporary_dir: "/var/tmp"
-          #~ extracted_dirname: "logstash-8.12.2"
-          #~ download_url: "https://artifacts.elastic.co/downloads/logstash/logstash-8.12.2-linux-x86_64.tar.gz"
-          #~ checksum: "sha512:76fb6b0d88a6f63d541b3a3abf3d0fccfa203fc56bd15724a4c97c431e62b06387b8908c7dfb342d316e01bf33c1e8957ad92f07938260de7a5896a075338d1c"
-          #~ config_filename: "logstash_conf_template.yml"
-          #~ basic_auth_user: ""
-          #~ basic_auth_password: ""
-          #~ force_basic_auth: no
-        #~ wares_lan_logstash_service:
-          #~ filename: "logstash-wares.service"
-          #~ description: "logstash (wares) service"
-          #~ after: ["network.target"]
-          #~ type: "simple"
-          #~ killmode: "process"
-          #~ execstart: "{{ wares_lan_logstash.binary_dir }}/bin/logstash -f {{ wares_lan_logstash.config_dir }}/{{ wares_lan_logstash.config_filename }}"
-          #~ wantedby: "multi-user.target"
-          #~ user: "{{ wares_lan_logstash.user }}"
-          #~ group: "{{ wares_lan_logstash.group }}"
-        #~ wares_lan_logstash:
-          #~ binary_dir: "/usr/local/bin/logstash"
-          #~ config_dir: "/usr/local/bin/logstash/config"
-          #~ user: "logstash"
-          #~ group: "users"
-          #~ config_filename: "logstash-conf.yml"
-          #~ run_as_service: true
-          #~ inputs:
-            #~ beats:
-              #~ - {id: 'standard-port', enabled: true, port: 5044}
-              #~ - {id: 'custom-port', enabled: false, port: 5045}
-          #~ outputs:
-            #~ elasticsearch:
-              #~ enabled: true
-              #~ hosts:
-                #~ - {id: 'dev', url: 'http://localhost', enabled: true, port: 9201}
-                #~ - {id: 'prod', url: 'http://es.domain.com', enabled: false, port: 9202}
-              #~ index: "%{[@metadata][beat]}-%{[@metadata][version]}-%{+YYYY.MM.dd}"
-              #~ ilm_enabled: False
-              #~ ssl_enabled: False
-              #~ ssl_certificate_verification: False
-              #~ cacert: ""
-              #~ auth:
-                #~ api_key: ""
-                #~ username: ""
-                #~ password: ""
-            #~ kafka:
-              #~ enabled: true
-              #~ hosts: 
-                #~ - {id: 'dev', servername: 'localhost', enabled: true, port: 9092}
-                #~ - {id: 'prod', servername: 'kafka.domain.com', enabled: false, port: 9092}
-              #~ codec: "json"
-              #~ topic_id: "incoming_log"
-              #~ id: "test_kafka_incoming"
-
-    #~ - name: Include role wares.lan.logstash
-      #~ include_role:
-        #~ name: "wares.lan.logstash"
-      #~ vars:
-        #~ wares_lan_logstash_actions: ["edit_json_config"]
-        #~ wares_lan_logstash_json_config:
-          #~ source_path: "/usr/local/bin/logstash/config/logstash-config.json"
-        #~ survey_filterblock_name: 'Specific application filters'
-        #~ survey_application_name: "MyApp 2.0"
-        #~ survey_application_token: "1d564fz6e4f6ze4f6zed4ez"
-        #~ survey_filter_1_name: "Example filter 1 for My App"
-        #~ survey_filter_1_type: "Grok"
-        #~ survey_filter_1_value: >-
-          #~ match => { "message" => "?<app_timestamp>%{GREEDYDATA} %{GREEDYDATA}) :: %{LOGLEVEL} :: %{IPV4} - - \[%{GREEDYDATA}\ %{TIME}\]  %{WORD:http_method}%{GREEDYDATA:url_path} HTTP/%{NUMBER:http_version}  %{NUMBER:http_status_code} -" }
-        #~ survey_filter_2_name: "Example filter 2 for My App"
-        #~ survey_filter_2_type: "Grok"
-        #~ survey_filter_2_value: >-
-          #~ match => { "message" => [
-            #~ # Most specific
-            #~ "%{DATE:my_log_date} %{TIME:my_log_TIME} :: %{LOGLEVEL} :: %{IPV4} - - \[%{GREEDYDATA}\ %{TIME}\] %{WORD:http_method} %{GREEDYDATA:url_path} HTTP/%{NUMBER:http_version} %{NUMBER:http_status_code} -",
-            #~ # Less specific
-            #~ "%{TIMESTAMP_ISO8601:temp_date} -- {GREEDYDATA:log_message}",
-            #~ # Raw:
-            #~ "%{GREEDYDATA:log_message}" ]
-        #~ survey_filter_3_name: ""
-        #~ survey_filter_3_type: ""
-        #~ survey_filter_3_value: ""
-        #~ survey_filter_4_name: ""
-        #~ survey_filter_4_type: ""
-        #~ survey_filter_4_value: ""
-        #~ survey_filter_5_name: ""
-        #~ survey_filter_5_type: ""
-        #~ survey_filter_5_value: ""
-
-    #~ - name: Include role wares.lan.logstash
-      #~ include_role:
-        #~ name: "wares.lan.logstash"
-      #~ vars:
-        #~ wares_lan_logstash_actions: ["update_logstash_filters"]
-        #~ wares_lan_logstash:
-          #~ config_dir: "/usr/local/bin/logstash/config"
-          #~ config_filename: "logstash-conf.yml"
-        #~ wares_lan_logstash_json_config:
-          #~ source_path: "/usr/local/bin/logstash/config/logstash-config.json"
-          #~ remote_src: yes
+          run_as_service: false
